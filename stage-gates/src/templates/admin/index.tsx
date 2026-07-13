@@ -9,7 +9,6 @@ import MemberModal from '@/components/Modals/MemberModal';
 export default function Admin() {
   const { members, areas, addArea, addMember } = useTeam();
   
-  // Controles de visibilidade dos modais
   const [isAreaModalOpen, setIsAreaModalOpen] = useState(false);
   const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
 
