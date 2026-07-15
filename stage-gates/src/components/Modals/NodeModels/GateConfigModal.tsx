@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { GateNode } from '@/templates/builder/mock';
-import * as M from './styles';
+import * as M from '@/components/Modals/ModalsStyles';
 
 interface GateConfigModalProps {
   isOpen: boolean;

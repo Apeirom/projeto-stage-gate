@@ -82,3 +82,12 @@ export const Footer = styled.div<{ $danger?: boolean }>`
   align-items: center;
   gap: 0.25rem;
 `
+export const StatusBadge = styled.span<{ $hold?: boolean }>`
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: ${({ $hold }) => ($hold ? '#fef08a' : '#e0e7ff')};
+  color: ${({ $hold }) => ($hold ? '#854d0e' : '#3730a3')};
+  text-transform: uppercase;
+`
