@@ -150,6 +150,7 @@ export const FormGroup = styled.div`
     outline: none;
     transition: all 0.2s ease;
     background: #ffffff;
+    color: #1e293b;
     
     /* Estado de Hover */
     &:hover {

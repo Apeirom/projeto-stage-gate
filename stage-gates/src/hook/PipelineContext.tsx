@@ -1,3 +1,4 @@
+// src/context/PipelineContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { PipelineNode, initialPipeline } from '@/templates/builder/mock';
 
@@ -17,13 +18,30 @@ export const PipelineProvider = ({ children }: { children: ReactNode }) => {
     const count = pipeline.filter(n => n.type === type).length;
     const isStage = type === 'stage';
     
-    const newNode: PipelineNode = {
-      id: `${type}-${Date.now()}`,
-      type,
-      title: `${isStage ? 'Stage' : 'Gate'} ${isStage ? count : count + 1}`,
-      description: 'Nova etapa do fluxo',
-      locked: false,
-    };
+    let newNode: PipelineNode;
+
+    if (isStage) {
+      newNode = {
+        id: `stage-${Date.now()}`,
+        type: 'stage',
+        title: `Stage ${count}`,
+        description: 'Nova etapa de trabalho do fluxo',
+        locked: false,
+        deliverables: [],
+        estimatedDays: 10, // valor padrão inicial
+      };
+    } else {
+      newNode = {
+        id: `gate-${Date.now()}`,
+        type: 'gate',
+        title: `Gate ${count + 1}`,
+        description: 'Ponto de decisão e aprovação',
+        locked: false,
+        gatekeepers: [],
+        criteria: [],
+      };
+    }
+
     setPipeline([...pipeline, newNode]);
   };
 
@@ -32,7 +50,15 @@ export const PipelineProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateNode = (id: string, updates: Partial<PipelineNode>) => {
-    setPipeline(prev => prev.map(node => node.id === id ? { ...node, ...updates } : node));
+    setPipeline(prev => 
+      prev.map(node => {
+        if (node.id === id) {
+          // União discriminada precisa de cast explícito no retorno
+          return { ...node, ...updates } as PipelineNode;
+        }
+        return node;
+      })
+    );
   };
 
   return (

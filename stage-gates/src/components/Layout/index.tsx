@@ -11,7 +11,8 @@ const AppContainer = styled.div`
 const MainContent = styled.main`
   flex-grow: 1;
   height: 100vh;      /* Trava a altura exatamente no tamanho da janela */
-  overflow: hidden;   /* Impede que a página inteira tenha scroll... */
+  overflow-y: auto;   
+  overflow-x: hidden;
   position: relative;
 `;
 
