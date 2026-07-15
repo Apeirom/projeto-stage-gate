@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const Container = styled.div`
   margin: 0 auto;
   padding: 3rem;
+  max-width: 1400px;
 `
 
 export const Header = styled.div`
@@ -95,7 +96,7 @@ export const SectionTitle = styled.h2`
 
 export const PendingGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: 1.5rem;
 `
 
@@ -106,6 +107,8 @@ export const ApprovalCard = styled.div`
   padding: 1.75rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
   transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     border-color: #cbd5e1;
@@ -117,13 +120,15 @@ export const ApprovalCard = styled.div`
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 1rem;
+    gap: 1rem;
   }
 
   h3 {
     margin: 0;
     color: #1e293b;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 700;
+    line-height: 1.3;
   }
 
   p {
@@ -131,10 +136,7 @@ export const ApprovalCard = styled.div`
     font-size: 0.9rem;
     margin: 0 0 1.5rem 0;
     line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    flex-grow: 1; /* Empurra os botões para baixo */
   }
 
   .stats {
@@ -156,42 +158,33 @@ export const ApprovalCard = styled.div`
   }
   .stat-item strong {
     color: #1e293b;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
   }
 
   .actions {
     display: flex;
-    gap: 0.75rem;
-  }
-
-  button {
-    flex: 1;
-    padding: 0.75rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.2s;
-    font-size: 0.9rem;
   }
 
   .btn-approve {
+    flex: 1;
+    padding: 0.85rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    font-size: 0.95rem;
     background: #3b0764;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
     &:hover {
       background: #2e054e;
-      transform: translateY(-1px);
-    }
-  }
-
-  .btn-review {
-    background: white;
-    border-color: #cbd5e1;
-    color: #475569;
-    &:hover {
-      background: #f8fafc;
-      border-color: #94a3b8;
-      color: #1e293b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(59, 7, 100, 0.2);
     }
   }
 `
