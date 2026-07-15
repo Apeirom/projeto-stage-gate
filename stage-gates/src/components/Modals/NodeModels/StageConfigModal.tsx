@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Plus, Trash2 } from 'lucide-react';
 import { StageNode } from '@/templates/builder/mock';
 import * as M from '@/components/Modals/ModalsStyles';
@@ -11,6 +12,9 @@ interface StageConfigModalProps {
 }
 
 export default function StageConfigModal({ isOpen, onClose, node, onSave }: StageConfigModalProps) {
+  // 👇 2. Estado para garantir que o Portal só rode no navegador (SSR safe)
+  const [mounted, setMounted] = useState(false);
+
   const [title, setTitle] = useState(node.title);
   const [description, setDescription] = useState(node.description);
   const [estimatedDays, setEstimatedDays] = useState(node.estimatedDays);
@@ -18,6 +22,7 @@ export default function StageConfigModal({ isOpen, onClose, node, onSave }: Stag
   const [newDeliverable, setNewDeliverable] = useState('');
 
   useEffect(() => {
+    setMounted(true);
     if (isOpen) {
       setTitle(node.title);
       setDescription(node.description);
@@ -26,7 +31,8 @@ export default function StageConfigModal({ isOpen, onClose, node, onSave }: Stag
     }
   }, [isOpen, node]);
 
-  if (!isOpen) return null;
+  // Se não estiver aberto ou não montado, não renderiza
+  if (!isOpen || !mounted) return null;
 
   const handleAddDeliverable = () => {
     if (newDeliverable.trim()) {
@@ -41,16 +47,12 @@ export default function StageConfigModal({ isOpen, onClose, node, onSave }: Stag
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(node.id, {
-      title,
-      description,
-      estimatedDays: Number(estimatedDays),
-      deliverables
-    });
+    onSave(node.id, { title, description, estimatedDays: Number(estimatedDays), deliverables });
     onClose();
   };
 
-  return (
+  // 👇 3. Envolver o retorno com createPortal
+  return createPortal(
     <M.Overlay>
       <M.Content>
         <h2>Configurar {node.title}</h2>
@@ -94,11 +96,6 @@ export default function StageConfigModal({ isOpen, onClose, node, onSave }: Stag
                   </button>
                 </M.ListItem>
               ))}
-              {deliverables.length === 0 && (
-                <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>
-                  Nenhum entregável obrigatório cadastrado ainda.
-                </span>
-              )}
             </M.ListContainer>
           </M.FormGroup>
 
@@ -108,6 +105,7 @@ export default function StageConfigModal({ isOpen, onClose, node, onSave }: Stag
           </M.Actions>
         </form>
       </M.Content>
-    </M.Overlay>
+    </M.Overlay>,
+    document.body // 👈 Destino do portal
   );
 }

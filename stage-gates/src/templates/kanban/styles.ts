@@ -3,9 +3,9 @@ import styled from 'styled-components'
 export const Page = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 2rem); /* Ocupa a tela inteira menos um respiro */
+  height: calc(100vh - 2rem);
   padding: 1.5rem 2rem;
-  overflow: hidden; /* O scroll será apenas nas colunas e no quadro horizontal */
+  overflow: hidden;
 `
 
 export const Header = styled.div`
@@ -30,11 +30,11 @@ export const Board = styled.div`
   display: flex;
   gap: 1.5rem;
   flex-grow: 1;
-  overflow-x: auto;
+  /* Mudança aqui: O board não deve rolar para baixo, apenas para os lados */
   overflow-y: hidden;
+  overflow-x: auto;
   padding-bottom: 1rem;
 
-  /* Estilizando a barra de rolagem horizontal para ficar elegante */
   &::-webkit-scrollbar {
     height: 8px;
   }
@@ -51,15 +51,18 @@ export const Board = styled.div`
 export const Column = styled.div<{ $type: 'stage' | 'gate' }>`
   min-width: 320px;
   width: 320px;
-  background: ${({ $type }) => ($type === 'stage' ? '#f8fafc' : '#f0fdfa')};
+  /* Mudança aqui: Escurecemos levemente o fundo da coluna para contrastar com os cards brancos */
+  background: ${({ $type }) => ($type === 'stage' ? '#f1f5f9' : '#ecfdf5')};
   border: 1px solid
-    ${({ $type }) => ($type === 'stage' ? '#e2e8f0' : '#ccfbf1')};
+    ${({ $type }) => ($type === 'stage' ? '#e2e8f0' : '#a7f3d0')};
   border-top: 4px solid
     ${({ $type }) => ($type === 'stage' ? '#64748b' : '#0d9488')};
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   max-height: 100%;
+  /* Adicionando uma leve sombra para destacar a coluna do fundo da tela */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 `
 
 export const ColumnHeader = styled.div<{ $type: 'stage' | 'gate' }>`
@@ -95,8 +98,21 @@ export const ColumnHeader = styled.div<{ $type: 'stage' | 'gate' }>`
 export const ColumnBody = styled.div`
   flex-grow: 1;
   padding: 1rem;
-  overflow-y: hidden;
+  /* MUDANÇA PRINCIPAL: Permitir scroll vertical dentro da coluna */
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  /* Estilizando a barra de rolagem da coluna para não ficar grosseira */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
 `

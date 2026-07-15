@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom'; // 👈 1. Importar o Portal
 import { Plus, Trash2 } from 'lucide-react';
 import { GateNode } from '@/templates/builder/mock';
 import * as M from '@/components/Modals/ModalsStyles';
@@ -11,6 +12,9 @@ interface GateConfigModalProps {
 }
 
 export default function GateConfigModal({ isOpen, onClose, node, onSave }: GateConfigModalProps) {
+  // 👇 2. Estado para o Portal
+  const [mounted, setMounted] = useState(false);
+
   const [title, setTitle] = useState(node.title);
   const [description, setDescription] = useState(node.description);
   const [gatekeepers, setGatekeepers] = useState<string[]>(node.gatekeepers || []);
@@ -20,6 +24,7 @@ export default function GateConfigModal({ isOpen, onClose, node, onSave }: GateC
   const [newCriteria, setNewCriteria] = useState('');
 
   useEffect(() => {
+    setMounted(true);
     if (isOpen) {
       setTitle(node.title);
       setDescription(node.description);
@@ -28,42 +33,29 @@ export default function GateConfigModal({ isOpen, onClose, node, onSave }: GateC
     }
   }, [isOpen, node]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const handleAddGatekeeper = () => {
-    if (newGatekeeper.trim()) {
-      setGatekeepers([...gatekeepers, newGatekeeper.trim()]);
-      setNewGatekeeper('');
-    }
+    if (newGatekeeper.trim()) { setGatekeepers([...gatekeepers, newGatekeeper.trim()]); setNewGatekeeper(''); }
   };
-
   const handleRemoveGatekeeper = (index: number) => {
     setGatekeepers(gatekeepers.filter((_, i) => i !== index));
   };
-
   const handleAddCriteria = () => {
-    if (newCriteria.trim()) {
-      setCriteria([...criteria, newCriteria.trim()]);
-      setNewCriteria('');
-    }
+    if (newCriteria.trim()) { setCriteria([...criteria, newCriteria.trim()]); setNewCriteria(''); }
   };
-
   const handleRemoveCriteria = (index: number) => {
     setCriteria(criteria.filter((_, i) => i !== index));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(node.id, {
-      title,
-      description,
-      gatekeepers,
-      criteria
-    });
+    onSave(node.id, { title, description, gatekeepers, criteria });
     onClose();
   };
 
-  return (
+  // 👇 3. Envolver o retorno com createPortal
+  return createPortal(
     <M.Overlay>
       <M.Content>
         <h2>Configurar {node.title}</h2>
@@ -97,16 +89,9 @@ export default function GateConfigModal({ isOpen, onClose, node, onSave }: GateC
               {gatekeepers.map((gk, index) => (
                 <M.ListItem key={index}>
                   <span>{gk}</span>
-                  <button type="button" onClick={() => handleRemoveGatekeeper(index)}>
-                    <Trash2 size={14} />
-                  </button>
+                  <button type="button" onClick={() => handleRemoveGatekeeper(index)}><Trash2 size={14} /></button>
                 </M.ListItem>
               ))}
-              {gatekeepers.length === 0 && (
-                <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>
-                  Nenhuma função ou cargo de aprovação cadastrado.
-                </span>
-              )}
             </M.ListContainer>
           </M.FormGroup>
 
@@ -129,16 +114,9 @@ export default function GateConfigModal({ isOpen, onClose, node, onSave }: GateC
               {criteria.map((item, index) => (
                 <M.ListItem key={index}>
                   <span>{item}</span>
-                  <button type="button" onClick={() => handleRemoveCriteria(index)}>
-                    <Trash2 size={14} />
-                  </button>
+                  <button type="button" onClick={() => handleRemoveCriteria(index)}><Trash2 size={14} /></button>
                 </M.ListItem>
               ))}
-              {criteria.length === 0 && (
-                <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontStyle: 'italic' }}>
-                  Nenhum critério técnico cadastrado.
-                </span>
-              )}
             </M.ListContainer>
           </M.FormGroup>
 
@@ -148,6 +126,7 @@ export default function GateConfigModal({ isOpen, onClose, node, onSave }: GateC
           </M.Actions>
         </form>
       </M.Content>
-    </M.Overlay>
+    </M.Overlay>,
+    document.body // 👈 Destino do portal
   );
 }
