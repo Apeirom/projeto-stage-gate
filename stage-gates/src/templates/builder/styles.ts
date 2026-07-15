@@ -15,7 +15,6 @@ export const Header = styled.div`
   position: fixed;
   top: 70px;
   left: 20rem;
-  z-index: 10;
   h1 {
     font-size: 1.875rem;
     color: #1e293b;
@@ -39,7 +38,6 @@ export const ZoomToolbar = styled.div`
   border-radius: 8px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   gap: 0.5rem;
-  z-index: 10;
   border: 1px solid #e2e8f0;
 `
 

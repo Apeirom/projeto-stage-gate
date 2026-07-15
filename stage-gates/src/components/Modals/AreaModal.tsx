@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as S from '@/templates/admin/styles';
+import * as S from '@/components/Modals/ModalsStyles';
 
 interface AreaModalProps {
   isOpen: boolean;
